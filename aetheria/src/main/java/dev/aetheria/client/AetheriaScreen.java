@@ -95,7 +95,7 @@ public final class AetheriaScreen extends Screen {
         int cx=x+16, right=x+pw-16, contentY=navY+43, bottom=y+ph-24;
         if(tab==3)drawStyle(g,cx,contentY,right,bottom,mouseX,mouseY);
         else drawFeatureGrid(g,cx,contentY,right,bottom,mouseX,mouseY,compact);
-        text(g,"RIGHT SHIFT  ·  CLOSE",x+pw-131,y+ph-14,0xFF77777C);
+        text(g,"ESC  ·  CLOSE",x+pw-131,y+ph-14,0xFF77777C);
     }
 
     private void drawFeatureGrid(GuiGraphicsExtractor g,int x1,int y1,int x2,int y2,int mx,int my,boolean compact) {
@@ -198,7 +198,7 @@ public final class AetheriaScreen extends Screen {
     }
     @Override public boolean mouseScrolled(double x,double y,double sx,double sy){scroll=Math.max(0,scroll-sy*25);return true;}
     @Override public boolean keyPressed(KeyEvent event){
-        if(event.key()==InputConstants.KEY_RSHIFT){onClose();return true;}
+        if(event.key()==InputConstants.KEY_ESCAPE){onClose();return true;}
         return super.keyPressed(event);
     }
     @Override public void onClose(){AetheriaClient.save();super.onClose();}

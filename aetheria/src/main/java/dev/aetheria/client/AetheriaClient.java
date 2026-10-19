@@ -40,7 +40,7 @@ public final class AetheriaClient implements ClientModInitializer {
  private static double lx,lz; private static boolean hasPos,particlesReady; private static int ticks;
  static {for(Feature f:FEATURES)enabled.put(f.id(),f.def());}
  public void onInitializeClient(){
-  load(); var category=KeyMapping.Category.register(Identifier.fromNamespaceAndPath("aetheria","main"));
+  load(); var category=KeyMapping.Category.register(Identifier.fromNamespaceAndPath("aetheria","visuals"));
   MENU=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.aetheria.menu",InputConstants.Type.KEYSYM,InputConstants.KEY_RSHIFT,category));
   ZOOM=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.aetheria.zoom",InputConstants.Type.KEYSYM,InputConstants.KEY_C,category));
   ClientTickEvents.END_CLIENT_TICK.register(AetheriaClient::tick);

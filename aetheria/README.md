@@ -14,7 +14,7 @@ A clean, client-side visual suite with a responsive settings screen. This projec
 1. Use Minecraft 26.1.2, Fabric Loader and Fabric API for 26.1.2, with Java 25.
 2. Put Aetheria-Visuals-26.1.2.jar in the instance's mods folder.
 3. Start the Fabric client. Press Right Shift to open the menu. Both menu and zoom bindings can be changed in Controls.
-4. Settings are saved automatically to config/aetheria.properties.
+4. To rebind the menu, open Options → Controls → Key Binds, find “Open Aetheria Visuals” in the “Aetheria Visuals” category, click its key slot, then press any available key. The menu no longer depends on Right Shift; Escape closes it. Settings are saved automatically to config/aetheria.properties.
 
 ## PojavLauncher / Android
 This is a Minecraft Java client mod, not a Bedrock/mobile mod. It can work in a PojavLauncher instance when that instance successfully runs the same Minecraft 26.1.2 + Fabric Loader + Fabric API + Java 25 combination. Rendering performance depends on the device, GPU driver and renderer. On phones, start with Ambient Particles disabled or use Low-effects mode, and bind the menu key to an accessible key in Controls.
