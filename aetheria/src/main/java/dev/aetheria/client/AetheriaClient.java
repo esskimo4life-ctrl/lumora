@@ -25,7 +25,7 @@ public final class AetheriaClient implements ClientModInitializer {
  new Feature("damageTint","Damage tint","Subtle low-health screen edges","Visuals",true),
  new Feature("fullbright","Full brightness","Raise client brightness while enabled","Visuals",false),
  new Feature("zoom","Smooth zoom","Hold C for configurable zoom","Visuals",false),
- new Feature("eco","Low-effects mode","Reduce particle count for FPS/battery","Performance",false)};
+ new Feature("eco","Low-effects mode","Reduce particle count for FPS/battery","Utility",false)};
  private static final Path CONFIG=FabricLoader.getInstance().getConfigDir().resolve("aetheria.properties");
  private static final int[] COLORS={0xFFBBA8FF,0xFF9AD9F2,0xFFFFB6A8,0xFF9ADAB8,0xFFF0CF8D,0xFFF1A7CC};
  private static final String[] COLOR_NAMES={"Lavender","Glacier","Peach","Sage","Honey","Rose"};
