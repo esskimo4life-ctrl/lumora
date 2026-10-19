@@ -36,9 +36,7 @@ public final class AstraBoostScreen extends Screen {
                 Minecraft.getInstance(), AstraBoostConfig.settingsForActiveProfile()
         );
         this.statusLine = profile.displayName() + " · " + result.summary();
-        if (Minecraft.getInstance().player != null)
-            Minecraft.getInstance().player.displayClientMessage(Component.literal("§a[AstraBoost] §f" + result.summary()), true);
-    }
+}
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
