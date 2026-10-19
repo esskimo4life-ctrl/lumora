@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -97,7 +98,7 @@ public enum AureaModule {
                     + player.blockPosition().getY() + "  " + player.blockPosition().getZ();
             case DIRECTION -> "Направление: " + player.getDirection().getName().toUpperCase(Locale.ROOT);
             case WORLD_TIME -> {
-                long ticks = Math.floorMod(client.level.getDayTime(), 24000L);
+                long ticks = Math.floorMod(client.level.getLevelData().getDayTime(), 24000L);
                 int hours = (int) ((ticks / 1000L + 6L) % 24L);
                 int minutes = (int) ((ticks % 1000L) * 60L / 1000L);
                 yield "Время мира: " + String.format(Locale.ROOT, "%02d:%02d", hours, minutes);
@@ -118,7 +119,12 @@ public enum AureaModule {
                 int count = 0;
                 int totalPercent = 0;
                 int durabilityPieces = 0;
-                for (ItemStack stack : player.getArmorSlots()) {
+                EquipmentSlot[] armorSlots = {
+                        EquipmentSlot.HEAD, EquipmentSlot.CHEST,
+                        EquipmentSlot.LEGS, EquipmentSlot.FEET
+                };
+                for (EquipmentSlot slot : armorSlots) {
+                    ItemStack stack = player.getItemBySlot(slot);
                     if (!stack.isEmpty()) {
                         count++;
                         if (stack.isDamageableItem()) {
@@ -157,7 +163,21 @@ public enum AureaModule {
             }
             case BIOME -> {
                 String biome = client.level.getBiome(player.blockPosition()).unwrapKey()
-                        .map(key -> key.location().getPath().replace('_', ' '))
+                        .map(key -> {
+                            String value = key.toString();
+                            int separator = value.lastIndexOf(" / ");
+                            if (separator >= 0) {
+                                value = value.substring(separator + 3);
+                            }
+                            if (value.endsWith("]")) {
+                                value = value.substring(0, value.length() - 1);
+                            }
+                            int namespace = value.indexOf(':');
+                            if (namespace >= 0) {
+                                value = value.substring(namespace + 1);
+                            }
+                            return value.replace('_', ' ');
+                        })
                         .orElse("неизвестно");
                 yield "Биом: " + biome;
             }
