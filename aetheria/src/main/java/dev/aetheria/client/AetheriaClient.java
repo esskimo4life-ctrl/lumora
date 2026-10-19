@@ -14,7 +14,6 @@ public final class AetheriaClient implements ClientModInitializer {
  public static final Feature[] FEATURES={
  new Feature("infobar","Live status bar","FPS, latency and session clock","HUD",true),
  new Feature("coordinates","Coordinates","Position, direction and speed","HUD",true),
- new Feature("keystrokes","Keystrokes","Animated WASD and mouse buttons","HUD",false),
  new Feature("armor","Equipment status","Armor and held-item durability","HUD",true),
  new Feature("potions","Effect list","Active effects with timers","HUD",true),
  new Feature("target","Target card","Name, distance and health","HUD",true),
@@ -42,7 +41,7 @@ public final class AetheriaClient implements ClientModInitializer {
  static {for(Feature f:FEATURES)enabled.put(f.id(),f.def());}
  public void onInitializeClient(){
   load(); var category=KeyMapping.Category.register(Identifier.fromNamespaceAndPath("aetheria","main"));
-  MENU=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.aetheria.menu",InputConstants.Type.KEYSYM,InputConstants.KEY_RIGHT_SHIFT,category));
+  MENU=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.aetheria.menu",InputConstants.Type.KEYSYM,InputConstants.KEY_RSHIFT,category));
   ZOOM=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.aetheria.zoom",InputConstants.Type.KEYSYM,InputConstants.KEY_C,category));
   ClientTickEvents.END_CLIENT_TICK.register(AetheriaClient::tick);
   HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("aetheria","hud"),(g,d)->render(g));
@@ -69,11 +68,10 @@ public final class AetheriaClient implements ClientModInitializer {
  private static void restore(Minecraft mc){restoreGamma(mc);restoreFov(mc);}
  private static void restoreGamma(Minecraft mc){if(gamma!=null&&mc.options!=null){mc.options.gamma().set(gamma);gamma=null;}}
  private static void restoreFov(Minecraft mc){if(fov!=null&&mc.options!=null){mc.options.fov().set(fov);fov=null;}}
- private static int panel(){return ((int)(opacity*2.55)<<24)|0x00131923;}
+ private static int panel(){return ((int)(opacity*2.55)<<24)|0x0025272D;}
  private static void rect(GuiGraphicsExtractor g,int x,int y,int w,int h,int c){if(w>0&&h>0)g.fill(x,y,x+w,y+h,c);}
- private static void box(GuiGraphicsExtractor g,int x,int y,int w,int h){
-  rect(g,x+2,y+2,w,h,0x18000000);rect(g,x,y,w,h,panel());rect(g,x+8,y,w-16,1,0x22FFFFFF);
- }
+ private static void round(GuiGraphicsExtractor g,int x,int y,int w,int h,int radius,int color){if(w<=0||h<=0)return;int r=Math.max(0,Math.min(radius,Math.min(w,h)/2));if(r==0){rect(g,x,y,w,h,color);return;}for(int i=0;i<r;i++){double dy=r-i-0.5;int inset=Math.max(0,r-(int)Math.round(Math.sqrt(r*r-dy*dy)));rect(g,x+inset,y+i,w-2*inset,1,color);rect(g,x+inset,y+h-1-i,w-2*inset,1,color);}rect(g,x,y+r,w,h-2*r,color);}
+ private static void box(GuiGraphicsExtractor g,int x,int y,int w,int h){int r=(int)Math.round(rounding);round(g,x+1,y+2,w,h,r,0x16000000);round(g,x,y,w,h,r,panel());rect(g,x+r,y,w-2*r,1,0x1CFFFFFF);}
  private static void txt(GuiGraphicsExtractor g,Minecraft m,String s,int x,int y,int c){g.text(m.font,s,x,y,c,false);}
  private static String fit(Minecraft m,String s,int w){while(!s.isEmpty()&&m.font.width(s)>w)s=s.substring(0,s.length()-1);return s;}
  private static void render(GuiGraphicsExtractor g){
@@ -84,17 +82,15 @@ public final class AetheriaClient implements ClientModInitializer {
   if(on("damageTint")&&m.player.getHealth()<9){int a=(int)((9-m.player.getHealth())/9*75);g.fillGradient(0,0,sw,Math.max(10,sh/9),(a<<24)|0x00E85D70,0x00E85D70);g.fillGradient(0,sh-Math.max(10,sh/9),sw,sh,0x00E85D70,(a<<24)|0x00E85D70);}
   if(on("particles"))particles(g,sw,sh,dt);
   if(on("reticle")){int cx=sw/2,cy=sh/2,c=accent();rect(g,cx-7,cy,4,1,c);rect(g,cx+4,cy,4,1,c);rect(g,cx,cy-7,1,4,c);rect(g,cx,cy+4,1,4,c);}
-  if(on("hitmarker")&&lastHit>0&&now/1_000_000-lastHit<260){int d=5,c=accent(),cx=sw/2,cy=sh/2;rect(g,cx-d-2,cy-d-2,2,2,c);rect(g,cx+d,cy-d-2,2,2,c);rect(g,cx-d-2,cy+d,2,2,c);rect(g,cx+d,cy+d,2,2,c);}
+  if(on("hitmarker")&&lastHit>0&&System.currentTimeMillis()-lastHit<260){int d=5,c=accent(),cx=sw/2,cy=sh/2;rect(g,cx-d-2,cy-d-2,2,2,c);rect(g,cx+d,cy-d-2,2,2,c);rect(g,cx-d-2,cy+d,2,2,c);rect(g,cx+d,cy+d,2,2,c);}
   if(on("infobar")){int x=sw/2-106;box(g,x,7,212,21);txt(g,m,"FPS  "+fps,x+9,14,0xFFF7F4FF);txt(g,m,"PING  "+ping,x+65,14,0xFFADB5C6);txt(g,m,clock,x+165,14,accent());}
   if(on("coordinates")){String a=(int)Math.floor(m.player.getX())+" / "+(int)Math.floor(m.player.getY())+" / "+(int)Math.floor(m.player.getZ());String b=String.format("%.1f b/s",speed);box(g,8,sh-40,Math.max(m.font.width(a),m.font.width(b))+18,34);txt(g,m,a,17,sh-33,0xFFF7F4FF);txt(g,m,b,17,sh-20,0xFFADB5C6);}
-  if(on("keystrokes")){int x=9,y=sh-72,k=18;key(g,m,x+k+2,y,k,"W",m.options.keyUp.isDown());key(g,m,x,y+k+2,k,"A",m.options.keyLeft.isDown());key(g,m,x+k+2,y+k+2,k,"S",m.options.keyDown.isDown());key(g,m,x+2*(k+2),y+k+2,k,"D",m.options.keyRight.isDown());}
   if(on("armor")){var stack=m.player.getMainHandItem();String s="ARMOR "+m.player.getArmorValue();if(stack.isDamageableItem())s+="  ·  "+Math.round(100.0*(stack.getMaxDamage()-stack.getDamageValue())/Math.max(1,stack.getMaxDamage()))+"%";int w=m.font.width(s)+18;box(g,(sw-w)/2,sh-27,w,19);txt(g,m,s,(sw-m.font.width(s))/2,sh-21,0xFFF1EDFA);}
   if(on("potions")){int row=0;for(var e:m.player.getActiveEffects()){if(row>=5)break;String n=e.getEffect().value().getDisplayName().getString();int sec=e.isInfiniteDuration()?-1:e.getDuration()/20;String tm=sec<0?"∞":sec/60+":"+String.format("%02d",sec%60);if(row==0)box(g,8,34,150,Math.min(75,m.player.getActiveEffects().size()*13+8));txt(g,m,fit(m,n,94),15,40+row*13,0xFFDDE2EF);txt(g,m,tm,119,40+row*13,accent());row++;}}
   if(on("target")&&m.crosshairPickEntity instanceof LivingEntity e&&e!=m.player){String n=e.getName().getString();int w=Math.max(130,m.font.width(n)+76),x=(sw-w)/2,y=sh/2+19;box(g,x,y,w,37);txt(g,m,fit(m,n,w-16),x+8,y+7,0xFFF7F4FF);txt(g,m,String.format("%.1f HP  ·  %.1f m",e.getHealth(),m.player.distanceTo(e)),x+8,y+20,accent());rect(g,x+8,y+31,w-16,2,0x44FFFFFF);rect(g,x+8,y+31,(int)((w-16)*Math.max(0,e.getHealth()/Math.max(1,e.getMaxHealth()))),2,accent());}
   if(on("compass")){String s="N  ·  "+Math.round((m.player.getYRot()%360+360)%360)+"°";box(g,sw/2-42,33,84,18);txt(g,m,s,sw/2-25,39,accent());}
   if(on("fpsgraph")){int x=sw-104,y=8;box(g,x,y,96,38);txt(g,m,"FRAME TIME",x+5,y+4,0xFFADB5C6);for(int i=0;i<40;i++){float v=frames[Math.floorMod(frameIndex-40+i,frames.length)];int h=Math.max(1,Math.min(17,(int)(v*.5)));rect(g,x+5+i*2,y+33-h,1,h,v<16.7?accent():0xFFF0CF8D);}}
  }
- private static void key(GuiGraphicsExtractor g,Minecraft m,int x,int y,int w,String s,boolean down){rect(g,x,y,w,18,down?accent():panel());txt(g,m,s,x+(w-m.font.width(s))/2,y+5,down?0xFFFFFFFF:0xFFADB5C6);}
  private static void spawn(int i,int w,int h){px[i]=random.nextFloat()*Math.max(1,w);py[i]=random.nextFloat()*Math.max(1,h);phase[i]=random.nextFloat()*6.28f;vx[i]=random.nextFloat()*10-5;vy[i]=8+random.nextFloat()*14;}
  private static void particles(GuiGraphicsExtractor g,int w,int h,float dt){int count=(int)(density*(on("eco")?.3:1));float t=System.nanoTime()/1e9f;for(int i=0;i<Math.min(count,px.length);i++){px[i]+=(vx[i]+(float)Math.sin(t+phase[i])*4)*dt;py[i]+=vy[i]*dt;if(py[i]>h||px[i]<0||px[i]>w)spawn(i,w,h);int a=(int)(80+55*Math.sin(t+phase[i]));rect(g,(int)px[i],(int)py[i],i%7==0?3:2,i%7==0?3:2,(a<<24)|(accent()&0xffffff));}}
  private static void load(){if(!Files.exists(CONFIG))return;Properties p=new Properties();try(InputStream in=Files.newInputStream(CONFIG)){p.load(in);for(Feature f:FEATURES)if(p.containsKey("f."+f.id()))enabled.put(f.id(),Boolean.parseBoolean(p.getProperty("f."+f.id())));palette=Integer.parseInt(p.getProperty("palette","0"));density=Double.parseDouble(p.getProperty("density","18"));opacity=Double.parseDouble(p.getProperty("opacity","76"));rounding=Double.parseDouble(p.getProperty("rounding","12"));zoomFov=Double.parseDouble(p.getProperty("zoom","38"));}catch(Exception ignored){}}

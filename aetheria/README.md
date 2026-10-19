@@ -3,8 +3,8 @@
 A clean, client-side visual suite with a responsive settings screen. This project is written independently; it does not depend on Lumora's rendering or module code.
 
 ## Included
-- A custom responsive configuration screen with Overview, Visuals, HUD, Performance and Style sections.
-- FPS/ping/session bar, coordinates + movement speed, keystrokes, armor/held-item status, active effect timers, target card, compass and frame-time graph.
+- A custom responsive configuration screen with Visuals, HUD, Utility and Style tabs with a compact two-column toggle layout inspired by the clean, restrained Pulse Visuals interface.
+- FPS/ping/session bar, coordinates + movement speed, armor/held-item status, active effect timers, target card, compass and frame-time graph. Keystrokes are intentionally excluded.
 - Ambient particles, hit feedback, accent reticle, low-health tint, optional full brightness, smooth hold-to-zoom and a low-effects mode.
 - Adjustable accent palette, particle amount, panel opacity, corner radius and zoom FOV.
 - Persistent settings in the config/aetheria.properties file; no external runtime libraries beyond Fabric API.
