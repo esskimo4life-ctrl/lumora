@@ -1,19 +1,17 @@
 {
-	"schemaVersion": 1,
-	"id": "lumora",
-	"version": "${version}",
-	"name": "Lumora Visuals",
-	"description": "Glass-style HUD and visual effects with a modern in-game menu. Client-side only.",
-	"authors": ["Lumora"],
-	"license": "MIT",
-	"environment": "client",
-	"entrypoints": {
-		"client": ["dev.lumora.LumoraClient"]
-	},
-	"depends": {
-		"fabricloader": ">=0.19.0",
-		"minecraft": "~26.1",
-		"java": ">=25",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "astraboost",
+  "version": "${version}",
+  "name": "AstraBoost",
+  "description": "Client-side performance profiles and conservative Minecraft options tuning for Android Java launchers.",
+  "authors": ["AstraBoost contributors"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["dev.astral.boost.AstraBoostClient"] },
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": "26.1.2",
+    "java": ">=25",
+    "fabric-api": ">=0.149.1"
+  }
 }
