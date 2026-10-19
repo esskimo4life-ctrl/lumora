@@ -1,19 +1,19 @@
 {
-	"schemaVersion": 1,
-	"id": "lumora",
-	"version": "${version}",
-	"name": "Lumora Visuals",
-	"description": "Glass-style HUD and visual effects with a modern in-game menu. Client-side only.",
-	"authors": ["Lumora"],
-	"license": "MIT",
-	"environment": "client",
-	"entrypoints": {
-		"client": ["dev.lumora.LumoraClient"]
-	},
-	"depends": {
-		"fabricloader": ">=0.19.0",
-		"minecraft": "~26.1",
-		"java": ">=25",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "aurea-visuals",
+  "version": "${version}",
+  "name": "Aurea Visuals",
+  "description": "Лёгкий клиентский визуальный мод с настраиваемым HUD и меню.",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.aurea.visuals.AureaClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": "~26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
 }

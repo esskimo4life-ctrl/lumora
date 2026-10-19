@@ -1,44 +1,56 @@
-name: Build Lumora and Aetheria
+name: Build Aurea Visuals
 
 on:
   push:
+    branches:
+      - aurea-visuals-26.1
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build mod and install ZIP
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
-      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Gradle 9.4.0
+        uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '9.5.1'
-      - name: Build existing project
-        run: gradle build --no-daemon --stacktrace
-      - name: Collect existing jar
+          gradle-version: '9.4.0'
+
+      - name: Compile and test the project
+        run: gradle --no-daemon clean build
+
+      - name: Package JAR and readme
         run: |
-          mkdir -p dist
-          cp build/libs/lumora-*.jar dist/
-          rm -f dist/*-sources.jar
-          ls -la dist
-      - uses: actions/upload-artifact@v4
+          mkdir -p release
+          cp build/libs/aurea-visuals-1.0.0.jar release/Aurea-Visuals-1.0.0+mc26.1.2.jar
+          cp README.md release/README.txt
+          cd release
+          zip -j ../Aurea-Visuals-26.1.2.zip Aurea-Visuals-1.0.0+mc26.1.2.jar README.txt
+
+      - name: Upload install ZIP
+        uses: actions/upload-artifact@v4
         with:
-          name: Lumora-jar
-          path: dist/lumora-*.jar
-      - name: Build Aetheria Visuals from its standalone project
-        run: gradle -p aetheria build --no-daemon --stacktrace
-      - name: Package Aetheria jar and install guide
-        run: |
-          mkdir -p aetheria-release
-          cp aetheria/build/libs/aetheria-visuals-1.0.0.jar aetheria-release/Aetheria-Visuals-26.1.2.jar
-          cp aetheria/README.md aetheria-release/INSTALLATION.txt
-          cd aetheria-release
-          zip -9 Aetheria-Visuals-26.1.2.zip Aetheria-Visuals-26.1.2.jar INSTALLATION.txt
-          ls -lh Aetheria-Visuals-26.1.2.zip Aetheria-Visuals-26.1.2.jar
-      - uses: actions/upload-artifact@v4
+          name: Aurea-Visuals-26.1.2
+          path: Aurea-Visuals-26.1.2.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload plain JAR
+        uses: actions/upload-artifact@v4
         with:
-          name: Aetheria-Visuals-Package
-          path: aetheria-release/Aetheria-Visuals-26.1.2.zip
+          name: Aurea-Visuals-JAR
+          path: release/Aurea-Visuals-1.0.0+mc26.1.2.jar
+          if-no-files-found: error
+          retention-days: 30
