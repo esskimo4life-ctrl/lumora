@@ -1,5 +1,6 @@
 package dev.aurea.visuals;
 
+import java.time.LocalTime;
 import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ public enum AureaModule {
     FPS("Счётчик FPS", "Показывает текущую частоту кадров.", Category.HUD, true, true),
     COORDS("Координаты", "Текущие координаты игрока в мире.", Category.HUD, true, true),
     DIRECTION("Направление", "Показывает направление взгляда.", Category.HUD, false, true),
-    WORLD_TIME("Время мира", "Показывает игровое время в мире.", Category.HUD, false, true),
+    WORLD_TIME("Часы", "Показывает текущее локальное время.", Category.HUD, false, true),
     HELD_ITEM("Предмет в руке", "Название предмета и его прочность.", Category.HUD, false, true),
     ARMOR("Прочность брони", "Количество частей брони и средний запас прочности.", Category.HUD, true, true),
     TARGET("Информация о цели", "Имя сущности под прицелом и здоровье цели.", Category.HUD, false, true),
@@ -97,12 +98,8 @@ public enum AureaModule {
             case COORDS -> "XYZ: " + player.blockPosition().getX() + "  "
                     + player.blockPosition().getY() + "  " + player.blockPosition().getZ();
             case DIRECTION -> "Направление: " + player.getDirection().getName().toUpperCase(Locale.ROOT);
-            case WORLD_TIME -> {
-                long ticks = Math.floorMod(client.level.getLevelData().getDayTime(), 24000L);
-                int hours = (int) ((ticks / 1000L + 6L) % 24L);
-                int minutes = (int) ((ticks % 1000L) * 60L / 1000L);
-                yield "Время мира: " + String.format(Locale.ROOT, "%02d:%02d", hours, minutes);
-            }
+            case WORLD_TIME -> "Время: " + LocalTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT));
             case HELD_ITEM -> {
                 ItemStack stack = player.getMainHandItem();
                 if (stack.isEmpty()) {
