@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "aetheria",
+  "version": "1.0.0",
+  "name": "Aetheria Visuals",
+  "description": "A polished, configurable client-side visual suite for Minecraft 26.1.2.",
+  "authors": ["Aetheria Team"],
+  "environment": "client",
+  "entrypoints": {"client": ["dev.aetheria.client.AetheriaClient"]},
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
