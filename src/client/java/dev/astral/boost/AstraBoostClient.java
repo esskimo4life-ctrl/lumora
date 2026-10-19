@@ -31,10 +31,7 @@ public final class AstraBoostClient implements ClientModInitializer {
                             client, AstraBoostConfig.settingsForActiveProfile()
                     );
                     System.out.println("[AstraBoost] " + result.summary());
-                    if (AstraBoostConfig.showChatNotice() && client.player != null) {
-                        client.player.displayClientMessage(Component.literal("§a[AstraBoost] §f" + result.summary()), true);
-                    }
-                }
+}
             }
             while (openMenuKey.consumeClick()) client.setScreen(new AstraBoostScreen());
         });
